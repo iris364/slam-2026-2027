@@ -9,7 +9,7 @@ $utilisateur = [
 $tickets = [
     ["id" => 1, "statut" => "ouvert", "priorite" => 2],
     ["id" => 2, "statut" => "ferme",  "priorite" => 1],
-    ["id" => 3, "statut" => "ouvert", "priorite" => 3]
+    ["id" => 4, "statut" => "ouvert", "priorite" => 3]
 ];
 
 function compterTicketsOuverts(array $tickets): int
