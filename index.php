@@ -1,5 +1,5 @@
 <?php
-
+//
 $utilisateur = [
     "nom" => "Nora",
     "actif" => true,
