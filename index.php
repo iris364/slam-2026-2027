@@ -1,23 +1,46 @@
 <?php
 
-$utilisateur = [
+$utilisateur = array(
     "nom" => "Nora",
     "actif" => true,
     "role" => "gestionnaire"
-];
+);
 
-$tickets = [
-    ["id" => 1, "statut" => "ouvert", "priorite" => 2],
-    ["id" => 2, "statut" => "ferme",  "priorite" => 1],
-    ["id" => 3, "statut" => "ouvert", "priorite" => 3]
-];
+$demandes = array(
+    array("id" => 101, "etat" => "nouvelle", "montant" => 250),
+    array("id" => 102, "etat" => "validee", "montant" => 900),
+    array("id" => 103, "etat" => "nouvelle", "montant" => 1400)
+);
 
-function compterTicketsOuverts(array $tickets): int
+
+function peutValider(array $utilisateur, array $demande): bool
+{
+    if (!$utilisateur["actif"]) {
+        return false;
+    }
+
+    if ($demande["etat"] !== "nouvelle") {
+        return false;
+    }
+
+    return $utilisateur["role"] === "admin"
+        || (
+            $utilisateur["role"] === "gestionnaire"
+            && $demande["montant"] <= 1000
+        );
+}
+
+
+function compterDemandesValidables(
+    array $utilisateur,
+    array $demandes
+): int
 {
     $compteur = 0;
 
-    foreach ($tickets as $ticket) {
-        if ($ticket["statut"] === "ouvert") {
+    foreach ($demandes as $demande) {
+
+        if (peutValider($utilisateur, $demande)) {
             $compteur++;
         }
     }
@@ -25,29 +48,64 @@ function compterTicketsOuverts(array $tickets): int
     return $compteur;
 }
 
-function peutClore(array $utilisateur, array $ticket): bool
-{
-    return $utilisateur["actif"]
-        && (
-            $utilisateur["role"] === "admin"
-            || $utilisateur["role"] === "gestionnaire"
-        )
-        && $ticket["statut"] === "ouvert";
-}
 
-function compterTicketsCloturables(array $utilisateur, array $tickets): int
+function idsDemandesValidables(
+    array $utilisateur,
+    array $demandes
+): array
 {
-    $compteur = 0;
+    $ids = array();
 
-    foreach ($tickets as $ticket) {
-        if (peutClore($utilisateur, $ticket)) {
-            $compteur++;
+    foreach ($demandes as $demande) {
+
+        if (peutValider($utilisateur, $demande)) {
+            $ids[] = $demande["id"];
         }
     }
 
-    return $compteur;
+    return $ids;
 }
 
-echo compterTicketsCloturables($utilisateur, $tickets); // 2
+
+function rechercherDemandeParId(
+    array $demandes,
+    int $id
+): ?array
+{
+    foreach ($demandes as $demande) {
+
+        if ($demande["id"] === $id) {
+            return $demande;
+        }
+    }
+
+    return null;
+}
+
+
+/* TESTS */
+
+echo "Nombre de demandes validables : ";
+echo compterDemandesValidables($utilisateur, $demandes);
+
+echo "<br><br>";
+
+echo "IDs des demandes validables : ";
+print_r(
+    idsDemandesValidables(
+        $utilisateur,
+        $demandes
+    )
+);
+
+echo "<br><br>";
+
+echo "Recherche de la demande 102 : ";
+print_r(
+    rechercherDemandeParId(
+        $demandes,
+        102
+    )
+);
 
 ?>
