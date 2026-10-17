@@ -1,46 +1,108 @@
 <?php
 
-$utilisateur = array(
-    "nom" => "Nora",
-    "actif" => true,
-    "role" => "gestionnaire"
+$agent = array(
+    "nom" => "Samira",
+    "compteActif" => true,
+    "role" => "support"
 );
 
-$demandes = array(
-    array("id" => 101, "etat" => "nouvelle", "montant" => 250),
-    array("id" => 102, "etat" => "validee", "montant" => 900),
-    array("id" => 103, "etat" => "nouvelle", "montant" => 1400)
+$journal = array(
+    "id" => 501,
+    "source" => "pare-feu",
+    "etat" => "disponible",
+    "niveau" => "standard"
+);
+
+$journaux = array(
+    array("id" => 501, "source" => "pare-feu",  "etat" => "disponible", "niveau" => "standard"),
+    array("id" => 502, "source" => "VPN",       "etat" => "disponible", "niveau" => "sensible"),
+    array("id" => 503, "source" => "serveur-web","etat" => "archive",    "niveau" => "standard"),
+    array("id" => 504, "source" => "antivirus", "etat" => "disponible", "niveau" => "standard")
 );
 
 
-function peutValider(array $utilisateur, array $demande): bool
+/*
+echo "Agent : " . $agent["nom"];
+
+print_r($journal);
+
+var_dump($agent["compteActif"]);
+
+if (
+    $agent["compteActif"]
+    && $journal["etat"] === "disponible"
+) {
+    echo "Contrôle poursuivi";
+} else {
+    echo "Accès bloqué";
+}
+    */
+
+function afficherJournal(array $journal): void
 {
-    if (!$utilisateur["actif"]) {
+    echo "<br>Journal #" . $journal["id"]
+        . " - " . $journal["source"];
+}
+
+//afficherJournal($journal);
+
+
+function peutConsulterJournal(array $agent, array $journal): bool
+{
+    if (!$agent["compteActif"]) {
         return false;
     }
 
-    if ($demande["etat"] !== "nouvelle") {
+    if ($journal["etat"] !== "disponible") {
         return false;
     }
 
-    return $utilisateur["role"] === "admin"
+    return $agent["role"] === "analyste"
         || (
-            $utilisateur["role"] === "gestionnaire"
-            && $demande["montant"] <= 1000
+            $agent["role"] === "support"
+            && $journal["niveau"] === "standard"
         );
 }
 
+$autorise = peutConsulterJournal($agent, $journal);
+//var_dump($autorise);
 
-function compterDemandesValidables(
-    array $utilisateur,
-    array $demandes
+echo peutConsulterJournal($agent, $journal)
+    ? $agent["nom"] . " oui<br>"
+    : $agent["nom"] . " non<br>";
+
+
+$compteur = 0;
+
+foreach ($journaux as $journalCourant) {
+    if ($journalCourant["etat"] === "disponible") {
+        $compteur++;
+    }
+}
+
+echo "Nombre de journal total disponibles : " . $compteur;
+
+function rechercherJournalParId(array $journaux, int $id): ?array
+{
+    foreach ($journaux as $journalCourant) {
+        if ($journalCourant["id"] === $id) {
+            return $journalCourant;
+        }
+    }
+
+
+    return null;
+}
+
+function compterJournauxConsultables(
+    array $agent,
+    array $journaux
 ): int
 {
     $compteur = 0;
 
-    foreach ($demandes as $demande) {
-
-        if (peutValider($utilisateur, $demande)) {
+    foreach ($journaux as $journalCourant) {
+        if (peutConsulterJournal($agent, $journalCourant)) {
             $compteur++;
         }
     }
@@ -48,64 +110,4 @@ function compterDemandesValidables(
     return $compteur;
 }
 
-
-function idsDemandesValidables(
-    array $utilisateur,
-    array $demandes
-): array
-{
-    $ids = array();
-
-    foreach ($demandes as $demande) {
-
-        if (peutValider($utilisateur, $demande)) {
-            $ids[] = $demande["id"];
-        }
-    }
-
-    return $ids;
-}
-
-
-function rechercherDemandeParId(
-    array $demandes,
-    int $id
-): ?array
-{
-    foreach ($demandes as $demande) {
-
-        if ($demande["id"] === $id) {
-            return $demande;
-        }
-    }
-
-    return null;
-}
-
-
-/* TESTS */
-
-echo "Nombre de demandes validables : ";
-echo compterDemandesValidables($utilisateur, $demandes);
-
-echo "<br><br>";
-
-echo "IDs des demandes validables : ";
-print_r(
-    idsDemandesValidables(
-        $utilisateur,
-        $demandes
-    )
-);
-
-echo "<br><br>";
-
-echo "Recherche de la demande 102 : ";
-print_r(
-    rechercherDemandeParId(
-        $demandes,
-        102
-    )
-);
-
-?>
+echo "<br> Nombre de journal consultable par " . $agent["nom"] . " : " . compterJournauxConsultables($agent,$journaux);
