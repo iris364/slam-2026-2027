@@ -38,36 +38,50 @@ Q12	Parcourir la liste, comparer chaque droit à DELETE, retourner vrai si trouv
 Q12 détaillée 
 
 POUR CHAQUE droit DANS droits FAIRE
+
     SI droit = "DELETE" ALORS
+
         RETOURNER VRAI
+
     FIN SI
+
 FIN POUR
+
 
 RETOURNER FAUX
 
 ou
 
 Version formalisée
+
 ALGORITHME contientDroitDelete
 
 ENTRÉE
+
     droits : liste de chaînes de caractères
 
 SORTIE
+
     booléen
 
 DÉBUT
+
     POUR CHAQUE droit DANS droits FAIRE
+
         SI droit = "DELETE" ALORS
+
             RETOURNER VRAI
+
         FIN SI
+
     FIN POUR
 
     RETOURNER FAUX
+
 FIN
 
 
-Trace d’exécution - droit présent
+
 
 
 
