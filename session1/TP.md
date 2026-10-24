@@ -47,8 +47,7 @@ POUR CHAQUE droit DANS droits FAIRE
 
 FIN POUR
 
-
-RETOURNER FAUX
+        RETOURNER FAUX
 
 ou
 
@@ -77,7 +76,6 @@ DÉBUT
     FIN POUR
 
     RETOURNER FAUX
-
 FIN
 
 
