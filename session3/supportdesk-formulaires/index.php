@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupportDesk - Nouvel incident</title>
+    <!-- index.php et le dossier css sont au même niveau -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <main class="conteneur">
+
+        <nav class="navigation">...</nav>
+
+<form class="formulaire" action="traitement.php" method="post">
+
+    <div class="champ">
+        <label for="titre">Titre</label>
+        <input type="text" id="titre" name="titre" required>
+    </div>
+
+    <div class="champ">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" required></textarea>
+    </div>
+
+    <div class="champ">​
+
+        <label for="priorite">Priorité</label>​
+
+        <select id="priorite" name="priorite" required>​
+            <option value="">-- Choisir --</option>​
+            <option value="basse">Basse</option>​
+            <option value="normale">Normale</option>​
+            <option value="haute">Haute</option>​
+        </select>​
+
+    </div>​
+
+    <button class="bouton" type="submit">Créer</button>
+</form>
+
+    </main>
+
+</body>
+</html>
