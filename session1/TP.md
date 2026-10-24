@@ -37,6 +37,7 @@ Q12	Parcourir la liste, comparer chaque droit à DELETE, retourner vrai si trouv
 
 Q12 détaillée 
 
+
 POUR CHAQUE droit DANS droits FAIRE
 
     SI droit = "DELETE" ALORS
